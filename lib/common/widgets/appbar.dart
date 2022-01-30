@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gyaan/view/settings_screen/settings.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:

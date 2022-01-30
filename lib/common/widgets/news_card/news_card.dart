@@ -18,7 +18,6 @@ import 'package:gyaan/controller/provider.dart';
 import 'package:gyaan/controller/settings.dart';
 import 'package:gyaan/global/global.dart';
 import 'package:gyaan/model/news_model.dart';
-import 'package:gyaan/routes/rouut.dart';
 import 'package:gyaan/services/news/offline_service.dart';
 import 'package:gyaan/style/colors.dart';
 import 'package:gyaan/style/text_style.dart';
