@@ -17,8 +17,10 @@ class GetDio {
           options.receiveTimeout = 90000;
           options.sendTimeout = 90000;
           options.followRedirects = true;
-          options.baseUrl = "http://newsapi.org/v2/";
-          options.headers["X-Api-Key"] = "${Global.apikey}";
+          options.baseUrl =
+              "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/";
+          options.headers["x-rapidapi-key"] = "${Global.apikey}";
+          options.headers["x-rapidapi-host"] = "${Global.host}";
 
           return options;
         },

@@ -11,5 +11,6 @@ class Global {
 
   static height(context) => MediaQuery.of(context).size.height;
   static width(context) => MediaQuery.of(context).size.width;
-  static String apikey = "cc74fa29d48044f8a8a6e13133abccca";
+  static String apikey = "564b0c25a4msh9eb9cb365915cb9p151ad1jsnc2036cdad2b0";
+  static String host = "contextualwebsearch-websearch-v1.p.rapidapi.com";
 }
