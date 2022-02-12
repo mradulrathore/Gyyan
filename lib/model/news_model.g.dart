@@ -27,7 +27,7 @@ class ArticlesAdapter extends TypeAdapter<Articles> {
   @override
   void write(BinaryWriter writer, Articles obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.sourceName)
       ..writeByte(1)
