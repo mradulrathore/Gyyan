@@ -69,7 +69,6 @@ class BottomActionBar extends StatelessWidget {
             onTap: () {
               // Todo: Implement
               print("Translation");
-              getTranslation(articles.description, "hi");
               Rouut.navigator.pushNamed(Rouut.translationScreen,
                   arguments: TranslateArguments(articals: articles));
             },
@@ -103,16 +102,5 @@ class BottomActionBar extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<String> getTranslation(String contentNews, String target) async {
-    TranslateData content = TranslateData(target: target, text: contentNews);
-    Response response = await GetTranslateDio.getTranslateDio().request("",
-        data: content.toJson(),
-        options: Options(method: "get", contentType: Headers.jsonContentType));
-
-    print(response.data);
-
-    return "hi";
   }
 }
