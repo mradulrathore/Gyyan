@@ -70,7 +70,8 @@ class BottomActionBar extends StatelessWidget {
               // Todo: Implement
               print("Translation");
               getTranslation(articles.description, "hi");
-              Rouut.navigator.pushNamed(Rouut.translationScreen);
+              Rouut.navigator.pushNamed(Rouut.translationScreen,
+                  arguments: TranslateArguments(articals: articles));
             },
           )
         ],

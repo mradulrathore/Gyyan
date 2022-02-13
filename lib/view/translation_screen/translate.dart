@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gyaan/common/widgets/news_card/bottom_bar.dart';
+import 'package:gyaan/model/news_model.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -16,6 +17,12 @@ import 'package:gyaan/style/text_style.dart';
 import '../../aplication_localization.dart';
 
 class TranslationScreen extends StatelessWidget {
+  final Articles articles;
+
+  TranslationScreen(
+    this.articles,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +41,9 @@ class TranslationScreen extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: Container(),
+        child: Container(
+          child: Text(articles.description),
+        ),
       ),
     );
   }

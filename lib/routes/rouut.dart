@@ -45,8 +45,10 @@ class Rouut {
           settings: settings,
         );
       case Rouut.translationScreen:
+        final transArgs = args as TranslateArguments;
+
         return MaterialPageRoute(
-          builder: (_) => TranslationScreen(),
+          builder: (_) => TranslationScreen(transArgs.articals),
           settings: settings,
         );
       case Rouut.bookmarkScreen:
@@ -130,6 +132,13 @@ class ExpandedImageViewArguments {
   final String image;
   ExpandedImageViewArguments({
     @required this.image,
+  });
+}
+
+class TranslateArguments {
+  final Articles articals;
+  TranslateArguments({
+    @required this.articals,
   });
 }
 
