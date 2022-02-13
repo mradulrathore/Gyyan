@@ -1,9 +1,13 @@
 // Flutter imports:
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:gyaan/app/dio/translate_dio.dart';
+import 'package:gyaan/model/translate_model.dart';
+import 'package:gyaan/routes/rouut.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -64,8 +68,11 @@ class BottomActionBar extends StatelessWidget {
             icon: FeatherIcons.helpCircle,
             onTap: () {
               // Todo: Implement
+              print("Translation");
+              getTranslation(articles.description, "hi");
+              Rouut.navigator.pushNamed(Rouut.translationScreen);
             },
-          ),
+          )
         ],
       ),
     );
@@ -95,5 +102,16 @@ class BottomActionBar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<String> getTranslation(String contentNews, String target) async {
+    TranslateData content = TranslateData(target: target, text: contentNews);
+    Response response = await GetTranslateDio.getTranslateDio().request("",
+        data: content.toJson(),
+        options: Options(method: "get", contentType: Headers.jsonContentType));
+
+    print(response.data);
+
+    return "hi";
   }
 }

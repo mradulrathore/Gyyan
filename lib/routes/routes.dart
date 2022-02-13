@@ -9,12 +9,14 @@ import 'package:gyaan/view/feed_screen/feed.dart';
 import 'package:gyaan/view/photo_view/photo_expanded_screen.dart';
 import 'package:gyaan/view/search_screen/search.dart';
 import 'package:gyaan/view/settings_screen/settings.dart';
+import 'package:gyaan/view/translation_screen/translate.dart';
 import 'package:gyaan/view/web_screen/web.dart';
 
 @autoRouter
 class $Router {
   SearchScreen searchScreen;
   SettingsScreen settingsScreen;
+  TranslationScreen translationScreen;
   BookmarkScreen bookmarkScreen;
   WebScreen webScreen;
   DiscoverScreen discoverScreen;

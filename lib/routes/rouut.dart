@@ -14,11 +14,13 @@ import 'package:gyaan/view/feed_screen/feed.dart';
 import 'package:gyaan/view/photo_view/photo_expanded_screen.dart';
 import 'package:gyaan/view/search_screen/search.dart';
 import 'package:gyaan/view/settings_screen/settings.dart';
+import 'package:gyaan/view/translation_screen/translate.dart';
 import 'package:gyaan/view/web_screen/web.dart';
 
 class Rouut {
   static const searchScreen = '/search-screen';
   static const settingsScreen = '/settings-screen';
+  static const translationScreen = '/translation-screen';
   static const bookmarkScreen = '/bookmark-screen';
   static const webScreen = '/web-screen';
   static const discoverScreen = '/discover-screen';
@@ -40,6 +42,11 @@ class Rouut {
       case Rouut.settingsScreen:
         return MaterialPageRoute(
           builder: (_) => SettingsScreen(),
+          settings: settings,
+        );
+      case Rouut.translationScreen:
+        return MaterialPageRoute(
+          builder: (_) => TranslationScreen(),
           settings: settings,
         );
       case Rouut.bookmarkScreen:
