@@ -2,11 +2,14 @@
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gyaan/app/dio/translate_dio.dart';
+import 'package:gyaan/model/translate_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -253,5 +256,18 @@ class NewsCard extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Future<String> getTranslation(String contentNews, String target) async {
+    print(target);
+    TranslateData content = TranslateData(target: target, text: contentNews);
+    Response response = await GetTranslateDio.getTranslateDio().post(
+      "",
+      data: content.toJson(),
+    );
+
+    TranslateDataResponse td = TranslateDataResponse.fromJson(response.data);
+
+    return td.text;
   }
 }

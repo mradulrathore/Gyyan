@@ -10,6 +10,7 @@ import 'package:gyaan/app/dio/translate_dio.dart';
 
 import 'package:gyaan/model/news_model.dart';
 import 'package:gyaan/model/translate_model.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -106,7 +107,7 @@ class TranslationScreen extends StatelessWidget {
     languageCodeMap['Dari'] = "";
     languageCodeMap['Divehi'] = "";
     languageCodeMap['Dutch'] = "";
-    languageCodeMap['English'] = "";
+    languageCodeMap['English'] = "en";
     languageCodeMap['Estonian'] = "";
     languageCodeMap['Fijian'] = "";
     languageCodeMap['Filipino'] = "";
@@ -119,7 +120,7 @@ class TranslationScreen extends StatelessWidget {
     languageCodeMap['Gujarati'] = "";
     languageCodeMap['Haitian Creole'] = "";
     languageCodeMap['Hebrew'] = "";
-    languageCodeMap['Hindi'] = "";
+    languageCodeMap['Hindi'] = "hi";
     languageCodeMap['Hmong Daw'] = "";
     languageCodeMap['Hungarian'] = "";
     languageCodeMap['Icelandic'] = "";
@@ -139,6 +140,7 @@ class TranslationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _getThingsOnStartup();
     return StatefulWrapper(
         onInit: () {
           _getThingsOnStartup();
@@ -159,23 +161,27 @@ class TranslationScreen extends StatelessWidget {
             ),
             body: SafeArea(
               bottom: false,
-              child: Container(
-                child: FutureBuilder<String>(
-                  future: getTranslation(articles.content, "hi"),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
-                        child: Text(snapshot.data),
-                      );
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
+              child: Consumer<SettingsProvider>(
+                builder: (context, settingsProvider, child) => Container(
+                  child: FutureBuilder<String>(
+                    future: getTranslation(articles.content,
+                        settingsProvider.getActiveLanguageCode()),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          child: Text(snapshot.data),
+                        );
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    },
+                  ),
                 ),
               ),
             )));
   }
 
   Future<String> getTranslation(String contentNews, String target) async {
+    print(target);
     TranslateData content = TranslateData(target: target, text: contentNews);
     Response response = await GetTranslateDio.getTranslateDio().post(
       "",
