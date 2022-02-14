@@ -144,38 +144,47 @@ class TranslationScreen extends StatelessWidget {
           _getThingsOnStartup();
         },
         child: Scaffold(
-          appBar: AppBar(
-            elevation: 1,
-            title: Text(
-              AppLocalizations.of(context).translate('translate'),
-              style: AppTextStyle.appBarTitle.copyWith(
-                fontSize: 18,
-                color: Provider.of<SettingsProvider>(context, listen: false)
-                        .isDarkThemeOn
-                    ? AppColor.background
-                    : AppColor.onBackground,
+            appBar: AppBar(
+              elevation: 1,
+              title: Text(
+                AppLocalizations.of(context).translate('translate'),
+                style: AppTextStyle.appBarTitle.copyWith(
+                  fontSize: 18,
+                  color: Provider.of<SettingsProvider>(context, listen: false)
+                          .isDarkThemeOn
+                      ? AppColor.background
+                      : AppColor.onBackground,
+                ),
               ),
             ),
-          ),
-          body: SafeArea(
-            bottom: false,
-            child: Container(
-              // child: Text(getTranslation(articles.description, "hi");),
-              child: Text(articles.description),
-            ),
-          ),
-        ));
+            body: SafeArea(
+              bottom: false,
+              child: Container(
+                child: FutureBuilder<String>(
+                  future: getTranslation(articles.content, "hi"),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        child: Text(snapshot.data),
+                      );
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                ),
+              ),
+            )));
   }
 
   Future<String> getTranslation(String contentNews, String target) async {
     TranslateData content = TranslateData(target: target, text: contentNews);
-    Response response = await GetTranslateDio.getTranslateDio().request("",
-        data: content.toJson(),
-        options: Options(method: "get", contentType: Headers.jsonContentType));
+    Response response = await GetTranslateDio.getTranslateDio().post(
+      "",
+      data: content.toJson(),
+    );
 
-    print(response.data);
+    TranslateDataResponse td = TranslateDataResponse.fromJson(response.data);
 
-    return "hi";
+    return td.text;
   }
 }
 

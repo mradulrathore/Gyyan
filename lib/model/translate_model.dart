@@ -11,14 +11,20 @@ class TranslateData {
 }
 
 class TranslateDataResponse {
-  TranslateDataResponse({this.target, this.text});
-
   String text;
-  String target;
+  String to;
 
-  factory TranslateDataResponse.fromJson(Map<String, dynamic> json) =>
-      TranslateDataResponse(
-        target: json['translations'].target,
-        text: json["translations"].text,
-      );
+  TranslateDataResponse({this.text, this.to});
+
+  TranslateDataResponse.fromJson(Map<String, dynamic> json) {
+    text = json['text'] as String;
+    to = json['to'] as String;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['text'] = this.text;
+    data['to'] = this.to;
+    return data;
+  }
 }

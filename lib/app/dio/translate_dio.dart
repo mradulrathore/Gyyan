@@ -18,7 +18,6 @@ class GetTranslateDio {
           options.sendTimeout = 90000;
           options.followRedirects = true;
           options.baseUrl = "https://mew-api.herokuapp.com/translate";
-          options.contentType = "application/json";
           return options;
         },
         onResponse: (Response response) async {
