@@ -29,7 +29,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsByTopic(String topic) async {
     final String url =
-        "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=10&autoCorrect=true";
+        "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=50&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
 
     provider.setDataLoaded(false);

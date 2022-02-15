@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gyaan/app/dio/translate_dio.dart';
 import 'package:gyaan/model/translate_model.dart';
+import 'package:gyaan/util/util.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -59,7 +60,8 @@ class NewsCard extends StatelessWidget {
   Widget _buildCard(BuildContext context, provider) {
     GlobalKey _containerKey = GlobalKey();
 
-    return Consumer<FeedProvider>(builder: (context, value, _) {
+    return Consumer2<FeedProvider, SettingsProvider>(
+        builder: (context, value, settings, _) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Container(
