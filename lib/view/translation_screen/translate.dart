@@ -10,6 +10,7 @@ import 'package:gyaan/app/dio/translate_dio.dart';
 
 import 'package:gyaan/model/news_model.dart';
 import 'package:gyaan/model/translate_model.dart';
+import 'package:gyaan/util/util.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -83,7 +84,7 @@ class TranslationScreen extends StatelessWidget {
 
   HashMap languageCodeMap;
 
-  _getThingsOnStartup() async {
+  _getThingsOnStartup() {
     languageCodeMap = new HashMap<String, String>();
     languageCodeMap['Afrikaans'] = "";
     languageCodeMap['Albanian'] = "";
@@ -178,19 +179,6 @@ class TranslationScreen extends StatelessWidget {
                 ),
               ),
             )));
-  }
-
-  Future<String> getTranslation(String contentNews, String target) async {
-    print(target);
-    TranslateData content = TranslateData(target: target, text: contentNews);
-    Response response = await GetTranslateDio.getTranslateDio().post(
-      "",
-      data: content.toJson(),
-    );
-
-    TranslateDataResponse td = TranslateDataResponse.fromJson(response.data);
-
-    return td.text;
   }
 }
 

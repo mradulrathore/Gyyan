@@ -257,17 +257,4 @@ class NewsCard extends StatelessWidget {
       );
     });
   }
-
-  Future<String> getTranslation(String contentNews, String target) async {
-    print(target);
-    TranslateData content = TranslateData(target: target, text: contentNews);
-    Response response = await GetTranslateDio.getTranslateDio().post(
-      "",
-      data: content.toJson(),
-    );
-
-    TranslateDataResponse td = TranslateDataResponse.fromJson(response.data);
-
-    return td.text;
-  }
 }

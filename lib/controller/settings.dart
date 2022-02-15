@@ -17,11 +17,9 @@ class SettingsProvider extends ChangeNotifier {
         break;
       case "हिंदी":
         return "hi";
-
         break;
       case "मराठी":
         return "mr";
-
         break;
       default:
         return "en";
