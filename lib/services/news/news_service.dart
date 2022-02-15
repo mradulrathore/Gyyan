@@ -1,8 +1,9 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:dio/dio.dart';
+import 'package:gyaan/controller/settings.dart';
+import 'package:gyaan/util/util.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     final String url =
         "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=50&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
 
     provider.setDataLoaded(false);
     provider.setLastGetRequest("getNewsByTopic", topic);
@@ -39,6 +41,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
+      translateNews(articles, settings.getActiveLanguageCode());
 
       provider.setDataLoaded(true);
       addArticlesToUnreads(articles);
@@ -53,16 +56,16 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsByCategory(String category) async {
     final String url =
-        "search/NewsSearchAPI?q=$category&pageNumber=1&pageSize=10&autoCorrect=true";
+        "search/NewsSearchAPI?q=$category&pageNumber=1&pageSize=50&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
 
     provider.setDataLoaded(false);
     provider.setLastGetRequest("getNewsByTopic", category);
-
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-
+      translateNews(articles, settings.getActiveLanguageCode());
       provider.setDataLoaded(true);
       addArticlesToUnreads(articles);
 
@@ -80,11 +83,12 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     provider.setDataLoaded(false);
 
     final String url =
-        "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=10&autoCorrect=true";
-
+        "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=50&autoCorrect=true";
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
+      translateNews(articles, settings.getActiveLanguageCode());
 
       addArticlesToUnreads(articles);
       provider.setDataLoaded(true);
@@ -102,6 +106,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     final provider = Provider.of<FeedProvider>(context, listen: false);
 
     provider.setLastGetRequest("getNewsFromLocalStorage", fromBox);
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
 
     print(fromBox);
 
@@ -111,6 +116,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
         articles.add(article);
       }
       provider.setDataLoaded(true);
+      translateNews(articles, settings.getActiveLanguageCode());
 
       return articles;
     } else {
