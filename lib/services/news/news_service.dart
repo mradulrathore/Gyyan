@@ -20,7 +20,7 @@ abstract class NewsFeedRepository {
 
   Future<List<Articles>> getNewsBySearchQuery(String query);
 
-  List<Articles> getNewsFromLocalStorage(String box);
+  Future<List<Articles>> getNewsFromLocalStorage(String box);
 }
 
 class NewsFeedRepositoryImpl implements NewsFeedRepository {
@@ -30,7 +30,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsByTopic(String topic) async {
     final String url =
-        "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=50&autoCorrect=true";
+        "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=5&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
     final settings = Provider.of<SettingsProvider>(context, listen: false);
 
@@ -41,10 +41,12 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-      translateNews(articles, settings.getActiveLanguageCode());
-
-      provider.setDataLoaded(true);
-      addArticlesToUnreads(articles);
+      articles = await translateNews(articles, settings.getActiveLanguageCode())
+          .then((value) {
+        provider.setDataLoaded(true);
+        addArticlesToUnreads(articles);
+        return value;
+      });
 
       return articles;
     } else {
@@ -56,7 +58,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsByCategory(String category) async {
     final String url =
-        "search/NewsSearchAPI?q=$category&pageNumber=1&pageSize=50&autoCorrect=true";
+        "search/NewsSearchAPI?q=$category&pageNumber=1&pageSize=5&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
 
     provider.setDataLoaded(false);
@@ -65,9 +67,12 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-      translateNews(articles, settings.getActiveLanguageCode());
-      provider.setDataLoaded(true);
-      addArticlesToUnreads(articles);
+      articles = await translateNews(articles, settings.getActiveLanguageCode())
+          .then((value) {
+        provider.setDataLoaded(true);
+        addArticlesToUnreads(articles);
+        return value;
+      });
 
       return articles;
     } else {
@@ -83,15 +88,17 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     provider.setDataLoaded(false);
 
     final String url =
-        "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=50&autoCorrect=true";
+        "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=5&autoCorrect=true";
     final settings = Provider.of<SettingsProvider>(context, listen: false);
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-      translateNews(articles, settings.getActiveLanguageCode());
-
-      addArticlesToUnreads(articles);
-      provider.setDataLoaded(true);
+      articles = await translateNews(articles, settings.getActiveLanguageCode())
+          .then((value) {
+        provider.setDataLoaded(true);
+        addArticlesToUnreads(articles);
+        return value;
+      });
       return articles;
     } else {
       provider.setDataLoaded(true);
@@ -100,7 +107,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   }
 
   @override
-  List<Articles> getNewsFromLocalStorage(String fromBox) {
+  Future<List<Articles>> getNewsFromLocalStorage(String fromBox) async {
     List<Articles> articles = [];
     final Box<Articles> hiveBox = Hive.box<Articles>(fromBox);
     final provider = Provider.of<FeedProvider>(context, listen: false);
@@ -115,8 +122,11 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
         Articles article = hiveBox.getAt(i);
         articles.add(article);
       }
-      provider.setDataLoaded(true);
-      translateNews(articles, settings.getActiveLanguageCode());
+      articles = await translateNews(articles, settings.getActiveLanguageCode())
+          .then((value) {
+        provider.setDataLoaded(true);
+        return value;
+      });
 
       return articles;
     } else {
