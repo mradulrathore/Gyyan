@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 // Project imports:
 import 'package:gyaan/model/news_model.dart';
+import 'package:gyaan/routes/rouut.dart';
 import 'package:gyaan/style/colors.dart';
 import 'package:gyaan/style/text_style.dart';
 import 'package:gyaan/view/web_screen/web.dart';
@@ -22,13 +23,16 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              WebScreen(url: articles.url, isFromBottom: true),
-        ),
-      ),
+      onTap: () => Rouut.navigator.pushNamed(Rouut.translationScreen,
+          arguments: TranslateArguments(articals: articles)),
+
+      //  Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) =>
+      //         WebScreen(url: articles.url, isFromBottom: true),
+      //   ),
+      //   ),
       child: Container(
         color: Theme.of(context).cardColor,
         // elevation: 0,

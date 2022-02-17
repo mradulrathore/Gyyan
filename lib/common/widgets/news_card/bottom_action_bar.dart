@@ -63,16 +63,16 @@ class BottomActionBar extends StatelessWidget {
               },
             ),
           ),
-          actionButton(
-            title: AppLocalizations.of(context).translate("translate"),
-            icon: FeatherIcons.helpCircle,
-            onTap: () {
-              // Todo: Implement
-              print("Translation");
-              Rouut.navigator.pushNamed(Rouut.translationScreen,
-                  arguments: TranslateArguments(articals: articles));
-            },
-          )
+          // actionButton(
+          //   title: AppLocalizations.of(context).translate("translate"),
+          //   icon: FeatherIcons.helpCircle,
+          //   onTap: () {
+          //     // Todo: Implement
+          //     print("Translation");
+          //     Rouut.navigator.pushNamed(Rouut.translationScreen,
+          //         arguments: TranslateArguments(articals: articles));
+          //   },
+          // )
         ],
       ),
     );

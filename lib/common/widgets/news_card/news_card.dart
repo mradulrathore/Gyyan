@@ -217,23 +217,23 @@ class NewsCard extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Consumer<SettingsProvider>(
-                                              builder:
-                                                  (context, theme, child) =>
-                                                      FaIcon(
-                                                FontAwesomeIcons.github,
-                                                size: 20,
-                                                color: theme.isDarkThemeOn
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            Text("github/mradulrathore"),
-                                          ],
-                                        ),
+                                        // Row(
+                                        //   children: <Widget>[
+                                        //     Consumer<SettingsProvider>(
+                                        //       builder:
+                                        //           (context, theme, child) =>
+                                        //               FaIcon(
+                                        //         FontAwesomeIcons.github,
+                                        //         size: 20,
+                                        //         color: theme.isDarkThemeOn
+                                        //             ? Colors.white
+                                        //             : Colors.black,
+                                        //       ),
+                                        //     ),
+                                        //     SizedBox(width: 8),
+                                        //     Text("By Gyaan"),
+                                        //   ],
+                                        // ),
                                         Row(
                                           children: [
                                             Image.asset(
@@ -242,7 +242,7 @@ class NewsCard extends StatelessWidget {
                                               width: 20,
                                             ),
                                             SizedBox(width: 8),
-                                            Text("Gyaan"),
+                                            Text("By Gyaan"),
                                           ],
                                         ),
                                       ],

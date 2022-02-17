@@ -1,17 +1,22 @@
 // Flutter imports:
 import 'dart:collection';
+import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 
 import 'package:gyaan/app/dio/translate_dio.dart';
+import 'package:gyaan/global/global.dart';
 
 import 'package:gyaan/model/news_model.dart';
 import 'package:gyaan/model/translate_model.dart';
+import 'package:gyaan/services/news/offline_service.dart';
 import 'package:gyaan/util/util.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -22,186 +27,170 @@ import 'package:gyaan/style/text_style.dart';
 import '../../aplication_localization.dart';
 
 class TranslationScreen extends StatelessWidget {
-  final Articles articles;
+  final Articles article;
 
   TranslationScreen(
-    this.articles,
+    this.article,
   );
 
-  var languages = {
-    'Afrikaans',
-    'Albanian',
-    'Amharic',
-    'Arabic',
-    'Armenian',
-    'Assamese',
-    'Azerbaijani',
-    'Bangla',
-    'Bashkir',
-    'Bosnian(Latin)',
-    'Bulgarian',
-    'Cantonese(Traditional)',
-    'Catala',
-    'Chinese(Literary)',
-    'Chinese Simplified',
-    'Chinese Traditional',
-    'Croatian',
-    'Czech',
-    'Danish',
-    'Dari',
-    'Divehi',
-    'Dutch',
-    'English',
-    'Estonian',
-    'Fijian',
-    'Filipino',
-    'Finnish',
-    'French',
-    'French(Canada)',
-    'Georgian',
-    'German',
-    'Greek',
-    'Gujarati',
-    'Haitian Creole',
-    'Hebrew',
-    'Hindi',
-    'Hmong Daw',
-    'Hungarian',
-    'Icelandic',
-    'Indonesian	',
-    'Inuinnaqtun',
-    'Kannada',
-    'Japanese',
-    'Malayalam',
-    'Marathi',
-    'Nepali',
-    'Punjabi',
-    'Russian',
-    'Telugu',
-    'Tamil',
-    'Urdu'
-  };
-
-  HashMap languageCodeMap;
-
-  _getThingsOnStartup() {
-    languageCodeMap = new HashMap<String, String>();
-    languageCodeMap['Afrikaans'] = "";
-    languageCodeMap['Albanian'] = "";
-    languageCodeMap['Amharic'] = "";
-    languageCodeMap['Arabic'] = "";
-    languageCodeMap['Armenian'] = "";
-    languageCodeMap['Assamese'] = "";
-    languageCodeMap['Azerbaijani'] = "";
-    languageCodeMap['Bangla'] = "";
-    languageCodeMap['Bashkir'] = "";
-    languageCodeMap['Bosnian(Latin)'] = "";
-    languageCodeMap['Bulgarian'] = "";
-    languageCodeMap['Cantonese(Traditional)'] = "";
-    languageCodeMap['Catalan'] = "";
-    languageCodeMap['Chinese(Literary)'] = "";
-    languageCodeMap['Chinese Simplified'] = "";
-    languageCodeMap['Chinese Traditional'] = "";
-    languageCodeMap['Croatian'] = "";
-    languageCodeMap['Czech'] = "";
-    languageCodeMap['Danish'] = "";
-    languageCodeMap['Dari'] = "";
-    languageCodeMap['Divehi'] = "";
-    languageCodeMap['Dutch'] = "";
-    languageCodeMap['English'] = "en";
-    languageCodeMap['Estonian'] = "";
-    languageCodeMap['Fijian'] = "";
-    languageCodeMap['Filipino'] = "";
-    languageCodeMap['Finnish'] = "";
-    languageCodeMap['French'] = "";
-    languageCodeMap['French(Canada)'] = "";
-    languageCodeMap['Georgian'] = "";
-    languageCodeMap['German'] = "";
-    languageCodeMap['Greek'] = "";
-    languageCodeMap['Gujarati'] = "";
-    languageCodeMap['Haitian Creole'] = "";
-    languageCodeMap['Hebrew'] = "";
-    languageCodeMap['Hindi'] = "hi";
-    languageCodeMap['Hmong Daw'] = "";
-    languageCodeMap['Hungarian'] = "";
-    languageCodeMap['Icelandic'] = "";
-    languageCodeMap['Indonesian	'] = "";
-    languageCodeMap['Inuinnaqtun'] = "";
-    languageCodeMap['Kannada'] = "";
-    languageCodeMap['Japanese'] = "";
-    languageCodeMap['Malayalam'] = "";
-    languageCodeMap['Marathi'] = "";
-    languageCodeMap['Nepali'] = "";
-    languageCodeMap['Punjabi'] = "";
-    languageCodeMap['Russian'] = "";
-    languageCodeMap['Telugu'] = "";
-    languageCodeMap['Tamil'] = "";
-    languageCodeMap['Urdu'] = "";
-  }
-
   @override
   Widget build(BuildContext context) {
-    _getThingsOnStartup();
-    return StatefulWrapper(
-        onInit: () {
-          _getThingsOnStartup();
-        },
-        child: Scaffold(
-            appBar: AppBar(
-              elevation: 1,
-              title: Text(
-                AppLocalizations.of(context).translate('translate'),
-                style: AppTextStyle.appBarTitle.copyWith(
-                  fontSize: 18,
-                  color: Provider.of<SettingsProvider>(context, listen: false)
-                          .isDarkThemeOn
-                      ? AppColor.background
-                      : AppColor.onBackground,
-                ),
-              ),
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 1,
+          title: Text(
+            AppLocalizations.of(context).translate('translate'),
+            style: AppTextStyle.appBarTitle.copyWith(
+              fontSize: 18,
+              color: Provider.of<SettingsProvider>(context, listen: false)
+                      .isDarkThemeOn
+                  ? AppColor.background
+                  : AppColor.onBackground,
             ),
-            body: SafeArea(
-              bottom: false,
-              child: Consumer<SettingsProvider>(
-                builder: (context, settingsProvider, child) => Container(
-                  child: FutureBuilder<String>(
-                    future: getTranslation(articles.content,
-                        settingsProvider.getActiveLanguageCode()),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Container(
-                          child: Text(snapshot.data),
-                        );
-                      }
-                      return Center(child: CircularProgressIndicator());
-                    },
-                  ),
+          ),
+        ),
+        body: SafeArea(
+          bottom: false,
+          child: Consumer<SettingsProvider>(
+            builder: (context, settingsProvider, child) => Container(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                        constraints: BoxConstraints(
+                          minHeight: Global.height(context),
+                          minWidth: double.maxFinite,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(width: 0.3),
+                        ),
+                        child: RepaintBoundary(
+                          child: Container(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            child:
+                                Stack(fit: StackFit.expand, children: <Widget>[
+                              FractionallySizedBox(
+                                alignment: Alignment.topCenter,
+                                heightFactor: 0.4,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: <Widget>[
+                                    article.urlToImage != null
+                                        ? Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColor.surface,
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  article.urlToImage,
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            color: AppColor.surface,
+                                          ),
+                                    Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      height: double.maxFinite,
+                                      width: double.maxFinite,
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 10, sigmaY: 10),
+                                        child: Container(
+                                          color: Colors.black.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    ),
+                                    article.urlToImage != null
+                                        ? GestureDetector(
+                                            // onTap: () => Router.navigator.pushNamed(
+                                            //   Router.expandedImageView,
+                                            //   arguments: ExpandedImageViewArguments(
+                                            //     image: article.urlToImage,
+                                            //   ),
+                                            // ),
+                                            child: Center(
+                                              child: CachedNetworkImage(
+                                                fit: BoxFit.cover,
+                                                alignment: Alignment.topCenter,
+                                                imageUrl: article.urlToImage,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                alignment: Alignment.bottomCenter,
+                                heightFactor: 0.6,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: <Widget>[
+                                    FractionallySizedBox(
+                                      alignment: Alignment.topCenter,
+                                      heightFactor: 0.85,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 25, 16, 16),
+                                        child: WatchBoxBuilder(
+                                          box: Hive.box<Articles>('bookmarks'),
+                                          builder: (context, box) => Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              GestureDetector(
+                                                onTap: () => handleBookmarks(
+                                                    article, context),
+                                                child: Text(
+                                                  article.title,
+                                                  style: box.containsKey(
+                                                          article.url)
+                                                      ? AppTextStyle.newsTitle
+                                                          .copyWith(
+                                                              color: AppColor
+                                                                  .accent)
+                                                      : AppTextStyle.newsTitle,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 4,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              SingleChildScrollView(
+                                                scrollDirection: Axis.vertical,
+                                                child: Text(
+                                                  article.content != null
+                                                      ? article.content
+                                                      : "",
+                                                  style:
+                                                      AppTextStyle.newsSubtitle,
+                                                  overflow: TextOverflow.fade,
+                                                  maxLines: 255,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ]),
+                          ),
+                        )))
+
+                //  Container(
+                //   child: Text(snapshot.data),
+                // );
+
                 ),
-              ),
-            )));
-  }
-}
-
-/// Wrapper for stateful functionality to provide onInit calls in stateles widget
-class StatefulWrapper extends StatefulWidget {
-  final Function onInit;
-  final Widget child;
-  const StatefulWrapper({@required this.onInit, @required this.child});
-  @override
-  _StatefulWrapperState createState() => _StatefulWrapperState();
-}
-
-class _StatefulWrapperState extends State<StatefulWrapper> {
-  @override
-  void initState() {
-    if (widget.onInit != null) {
-      widget.onInit();
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
+          ),
+        ));
   }
 }
