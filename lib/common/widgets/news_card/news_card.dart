@@ -177,7 +177,8 @@ class NewsCard extends StatelessWidget {
                                     height: 16,
                                   ),
                                   Text(
-                                    "${AppLocalizations.of(context).translate("swipe_message")} ${article.sourceName}",
+                                    "${AppLocalizations.of(context).translate("swipe_message")}",
+                                    // ${article.sourceName}",
                                     // / ${DateFormat("MMMM d").format(
                                     // DateTime.parse(article.publishedAt),
                                     // )}",

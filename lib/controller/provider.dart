@@ -54,11 +54,6 @@ class FeedProvider extends ChangeNotifier {
 
   bool get webviwAdded => _webviwAdded;
 
-  void reload() {
-    print("Reloaded");
-    notifyListeners();
-  }
-
   void setActiveCategory(int activeCategory) {
     this._activeCategory = activeCategory;
     notifyListeners();

@@ -30,7 +30,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsByTopic(String topic) async {
     final String url =
-        "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=5&autoCorrect=true";
+        "search/NewsSearchAPI?q=$topic&pageNumber=1&pageSize=3&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
     final settings = Provider.of<SettingsProvider>(context, listen: false);
 
@@ -58,7 +58,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsByCategory(String category) async {
     final String url =
-        "search/NewsSearchAPI?q=$category&pageNumber=1&pageSize=5&autoCorrect=true";
+        "search/NewsSearchAPI?q=$category&pageNumber=1&pageSize=3&autoCorrect=true";
     final provider = Provider.of<FeedProvider>(context, listen: false);
 
     provider.setDataLoaded(false);
@@ -88,7 +88,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     provider.setDataLoaded(false);
 
     final String url =
-        "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=5&autoCorrect=true";
+        "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=3&autoCorrect=true";
     final settings = Provider.of<SettingsProvider>(context, listen: false);
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {

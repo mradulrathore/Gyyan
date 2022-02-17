@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gyaan/bloc/feed/news_feed_bloc.dart';
+import 'package:gyaan/bloc/feed/news_feed_event.dart';
 import 'package:gyaan/controller/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +21,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<FeedProvider>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
@@ -66,7 +68,11 @@ class SettingsScreen extends StatelessWidget {
                   }).toList(),
                   onChanged: (v) {
                     settingsProvider.setLang(v);
-                    provider.reload();
+
+                    BlocProvider.of<NewsFeedBloc>(context)
+                      ..add(
+                        FetchNewsByCategoryEvent(category: "general"),
+                      );
                   }),
             )
           ],
