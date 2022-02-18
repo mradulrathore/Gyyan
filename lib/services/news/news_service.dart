@@ -13,6 +13,8 @@ import 'package:gyaan/controller/provider.dart';
 import 'package:gyaan/model/news_model.dart';
 import 'package:gyaan/services/news/offline_service.dart';
 
+import '../../aplication_localization.dart';
+
 abstract class NewsFeedRepository {
   Future<List<Articles>> getNewsByTopic(String topic);
 
@@ -64,6 +66,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     provider.setDataLoaded(false);
     provider.setLastGetRequest("getNewsByTopic", category);
     final settings = Provider.of<SettingsProvider>(context, listen: false);
+
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;

@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -129,9 +130,7 @@ class TranslationScreen extends StatelessWidget {
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: <Widget>[
-                                    FractionallySizedBox(
-                                      alignment: Alignment.topCenter,
-                                      heightFactor: 0.85,
+                                    SingleChildScrollView(
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             16, 25, 16, 16),
@@ -167,10 +166,11 @@ class TranslationScreen extends StatelessWidget {
                                                   article.content != null
                                                       ? article.content
                                                       : "",
+                                                  textAlign: TextAlign.justify,
                                                   style:
                                                       AppTextStyle.newsSubtitle,
                                                   overflow: TextOverflow.fade,
-                                                  maxLines: 255,
+                                                  //  maxLines: 255,
                                                 ),
                                               ),
                                             ],
@@ -183,13 +183,7 @@ class TranslationScreen extends StatelessWidget {
                               ),
                             ]),
                           ),
-                        )))
-
-                //  Container(
-                //   child: Text(snapshot.data),
-                // );
-
-                ),
+                        )))),
           ),
         ));
   }
