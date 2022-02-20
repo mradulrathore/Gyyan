@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:dio/dio.dart';
+import 'package:gyaan/app/dio/summary_dio.dart';
 import 'package:gyaan/controller/settings.dart';
+import 'package:gyaan/model/summary_model.dart';
+import 'package:gyaan/model/translate_model.dart';
 import 'package:gyaan/util/util.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +46,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-      articles = await translateNews(articles, settings.getActiveLanguageCode())
+      articles = await processNews(articles, settings.getActiveLanguageCode())
           .then((value) {
         provider.setDataLoaded(true);
         addArticlesToUnreads(articles);
@@ -65,12 +68,14 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
 
     provider.setDataLoaded(false);
     provider.setLastGetRequest("getNewsByTopic", category);
-    final settings = Provider.of<SettingsProvider>(context, listen: false);
+    final settings = Provider.of<SettingsProvider>(context, listen: true);
+    settings.notify();
 
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-      articles = await translateNews(articles, settings.getActiveLanguageCode())
+
+      articles = await processNews(articles, settings.getActiveLanguageCode())
           .then((value) {
         provider.setDataLoaded(true);
         addArticlesToUnreads(articles);
@@ -87,21 +92,22 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
   @override
   Future<List<Articles>> getNewsBySearchQuery(String query) async {
     final provider = Provider.of<FeedProvider>(context, listen: false);
-
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     provider.setDataLoaded(false);
-
+    // query = await getTranslation(query, "en");
     final String url =
         "search/NewsSearchAPI?q=$query&pageNumber=1&pageSize=3&autoCorrect=true";
-    final settings = Provider.of<SettingsProvider>(context, listen: false);
+
     Response response = await GetDio.getDio().get(url);
     if (response.statusCode == 200) {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
-      articles = await translateNews(articles, settings.getActiveLanguageCode())
+      articles = await processNews(articles, settings.getActiveLanguageCode())
           .then((value) {
         provider.setDataLoaded(true);
         addArticlesToUnreads(articles);
         return value;
       });
+
       return articles;
     } else {
       provider.setDataLoaded(true);
@@ -125,7 +131,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
         Articles article = hiveBox.getAt(i);
         articles.add(article);
       }
-      articles = await translateNews(articles, settings.getActiveLanguageCode())
+      articles = await processNews(articles, settings.getActiveLanguageCode())
           .then((value) {
         provider.setDataLoaded(true);
         return value;

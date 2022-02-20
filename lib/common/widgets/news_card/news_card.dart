@@ -166,8 +166,8 @@ class NewsCard extends StatelessWidget {
                                     height: 8,
                                   ),
                                   Text(
-                                    article.description != null
-                                        ? article.description
+                                    article.summary != null
+                                        ? article.summary
                                         : "",
                                     style: AppTextStyle.newsSubtitle,
                                     overflow: TextOverflow.fade,

@@ -36,6 +36,10 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void notify() {
+    notifyListeners();
+  }
+
   void setLang(String value) {
     activeLanguge = value;
 

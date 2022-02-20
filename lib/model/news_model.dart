@@ -50,6 +50,8 @@ class Articles {
   String publishedAt;
   @HiveField(6)
   String content;
+  @HiveField(7)
+  String summary;
 
   Articles(
       {this.sourceName,
@@ -58,7 +60,8 @@ class Articles {
       this.url,
       this.urlToImage,
       this.publishedAt,
-      this.content});
+      this.content,
+      this.summary});
 
   Articles.fromJson(Map<String, dynamic> json) {
     sourceName = json['provider'] != null
