@@ -48,11 +48,10 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
       List<Articles> articles = NewsModel.fromJson(response.data).articles;
       articles = await processNews(articles, settings.getActiveLanguageCode())
           .then((value) {
-        provider.setDataLoaded(true);
         addArticlesToUnreads(articles);
+        provider.setDataLoaded(true);
         return value;
       });
-
       return articles;
     } else {
       provider.setDataLoaded(true);
@@ -68,7 +67,7 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
 
     provider.setDataLoaded(false);
     provider.setLastGetRequest("getNewsByTopic", category);
-    final settings = Provider.of<SettingsProvider>(context, listen: true);
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     settings.notify();
 
     Response response = await GetDio.getDio().get(url);
@@ -77,8 +76,8 @@ class NewsFeedRepositoryImpl implements NewsFeedRepository {
 
       articles = await processNews(articles, settings.getActiveLanguageCode())
           .then((value) {
-        provider.setDataLoaded(true);
         addArticlesToUnreads(articles);
+        provider.setDataLoaded(true);
         return value;
       });
 
